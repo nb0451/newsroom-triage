@@ -114,7 +114,8 @@ def _groq_classify(text, prompt, passages):
     body = {
         "model": config.MODEL,
         "temperature": config.TEMPERATURE,
-        "max_tokens": 80,
+        "max_tokens": 300,
+        "reasoning_effort": "low",
         "messages": [
             {"role": "system", "content": prompt + context},
             {"role": "user", "content":
@@ -264,6 +265,8 @@ def score(golden):
     rows, preds, truth = [], [], []
     for g in golden:
         tr = classify(g["text"])
+        if tr.mode == "live":
+            time.sleep(2)
         rows.append({"text": g["text"][:90], "expected": g["label"],
                      "got": tr.final, "ok": tr.final == g["label"],
                      "branch": tr.branch, "confidence": tr.confidence})

@@ -74,3 +74,19 @@ def test_a_blocked_answer_never_reaches_the_user():
         assert tr.final == engine.SAFE
     finally:
         config.CONFIDENCE_FLOOR = original
+
+
+def test_unsure_headline_is_asked_twice_and_agreement_recorded(monkeypatch):
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+    tr = engine.classify("zzz qqq xxx")
+    assert tr.confidence < 0.6
+    assert tr.agreed is True
+    assert tr.second_answer == tr.raw_answer
+
+
+def test_sure_headline_is_asked_once(monkeypatch):
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+    tr = engine.classify("The president met the minister and troops at the "
+                         "government talks")
+    assert tr.confidence >= 0.6
+    assert tr.agreed is None

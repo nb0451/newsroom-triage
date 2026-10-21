@@ -199,6 +199,8 @@ class Trace:
     final: str = ""
     mode: str = "demo"
     ms: int = 0
+    second_answer: str = ""
+    agreed: Optional[bool] = None
 
 SAFE = "I am not able to answer that one."
 
@@ -229,10 +231,15 @@ def classify(headline):
             tr.final = "I do not have a note covering that."
         tr.confidence = 1.0
     else:
-        if tr.mode == "live":
-            cat, conf = _groq_classify(headline, config.SYSTEM_PROMPT, tr.passages)
-        else:
-            cat, conf = _demo_classify(headline)
+        def ask():
+            if tr.mode == "live":
+                return _groq_classify(headline, config.SYSTEM_PROMPT, tr.passages)
+            return _demo_classify(headline)
+        cat, conf = ask()
+        if conf < 0.6:
+            cat2, conf2 = ask()
+            tr.second_answer = cat2
+            tr.agreed = (cat2 == cat)
         tr.final, tr.confidence = cat, conf
 
     tr.raw_answer = tr.final

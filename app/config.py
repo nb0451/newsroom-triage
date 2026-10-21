@@ -29,6 +29,12 @@
 SYSTEM_PROMPT = """
 You are a news headline classifier. Put each headline into exactly one of
 these four categories: World, Sports, Business, Sci/Tech.
+Boundary rules:
+- Software, hardware, the internet, telecoms, space and research stories are
+  Sci/Tech, even when money or a company is mentioned.
+- Business is for company finances, markets, prices, jobs and the economy.
+- Sports is for matches, results, athletes and teams.
+- World is for politics, conflict and national affairs.
 If a headline could fit more than one category, choose the one it is
 mostly about.
 """

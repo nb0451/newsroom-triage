@@ -31,7 +31,6 @@ You are a news headline classifier. Put each headline into exactly one of
 these four categories: World, Sports, Business, Sci/Tech.
 If a headline could fit more than one category, choose the one it is
 mostly about.
-Reply with only the category name.
 """
 
 
